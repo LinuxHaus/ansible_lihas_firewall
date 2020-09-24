@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  author: Adrian Reyer <lihas@lihas.de>
+  description: Install firewall-lihas on Debian
+  license: GPL-3.0-or-later
+  company: LiHAS - LinuxHaus Stuttgart
+  min_ansible_version: 2.4
+  galaxy_tags: []
+dependencies:
+  - name: lihas-common
+    src: https://github.com/LinuxHaus/ansible-lihas-common.git
+    version: origin/master
+  - name: lihas-ulogd
+    src: https://github.com/LinuxHaus/ansible-lihas-ulogd.git
+    version: origin/master
+    when: ansible_virtualization_type == 'lxc'

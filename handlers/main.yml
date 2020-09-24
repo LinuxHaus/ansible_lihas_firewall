@@ -1,0 +1,6 @@
+---
+- name: reload_firewall-lihas
+  service:
+    name: firewall-lihas
+    state: restarted
+

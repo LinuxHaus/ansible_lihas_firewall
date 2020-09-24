@@ -1,0 +1,41 @@
+---
+- name: install software
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - firewall-lihas
+  loop_control:
+    loop_var: item
+  notify: reload_firewall-lihas
+
+# LXCs: use NFLOG
+- name: "/etc/default/firewall: TARGETLOG=NFLOG"
+  lineinfile:
+    path: /etc/default/firewall
+    regexp: '^TARGETLOG='
+    line: 'TARGETLOG=NFLOG'
+    create: yes
+  when: ansible_virtualization_type == 'lxc'
+  notify: reload_firewall-lihas
+
+# firewall-lihas
+- name: config firewall-lihas
+  template:
+    src: "{{ file }}.j2"
+    dest: "/{{ file }}"
+  loop:
+    - etc/firewall.lihas.d/localhost
+    - etc/firewall.lihas.d/localhost-ansible
+  loop_control:
+    loop_var: file
+  notify: reload_firewall-lihas
+- name: "configgroups evaluation"
+  include: configgroup.yml
+  loop: "{{ configspaces }}"
+  loop_control:
+    loop_var: configgroup
+- name: enable firewall-lihas
+  service:
+    name: firewall-lihas
+    enabled: true

@@ -1,0 +1,22 @@
+---
+- name: create interface directory
+  file:
+    path: "/etc/firewall.lihas.d/interface-{{ iface }}"
+    state: directory
+- debug:
+    msg: "group {{ configgroup }}, iface {{ iface }}"
+- name: "firewall for interface {{ iface }}"
+  template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/{{ file }}"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+  loop:
+    - comment
+    - network
+    - privclients
+    - snat
+    - dnat
+    - masquerade
+    - mark
+  loop_control:
+    loop_var: file
+  notify: reload_firewall-lihas

@@ -1,0 +1,12 @@
+---
+- debug:
+    var: hostvars[inventory_hostname][configgroup]['config']['firewall']['interface_links']
+- name: link common interface directories
+  file:
+    src: "/etc/firewall.lihas.d/interface-{{ iface }}"
+    path: "/etc/firewall.lihas.d/interface-{{ file }}"
+    state: link
+  loop:  "{{ hostvars[inventory_hostname][configgroup]['config']['firewall']['interface_links'][iface] | default([]) }}"
+  loop_control:
+    loop_var: file
+  notify: reload_firewall-lihas

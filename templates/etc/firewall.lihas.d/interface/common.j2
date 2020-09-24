@@ -1,0 +1,5 @@
+{% for group in configspaces | default([]) %}
+{% for line in hostvars[inventory_hostname][group]['config']['firewall']['interface'][iface][file] | default([]) %}
+{{ line }}
+{% endfor %}
+{% endfor %}

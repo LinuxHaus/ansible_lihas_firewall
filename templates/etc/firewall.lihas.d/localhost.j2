@@ -1,0 +1,12 @@
+# managed by ansible
+
+[ -e /etc/firewall.lihas.d/localhost-vpn ] && . /etc/firewall.lihas.d/localhost-vpn
+
+# allow everything between routing interfaces
+for in in $([ -e /etc/firewall.lihas.d/groups/ifacegroup-vpn ] && cat /etc/firewall.lihas.d/groups/ifacegroup-vpn) {% for group in configspaces | default([]) %}{% for iface in hostvars[inventory_hostname][group]['config']['firewall']['nofw'] | default([]) %}{{ iface }}{% endfor %}{% endfor %}; do
+  for out in $([ -e /etc/firewall.lihas.d/groups/ifacegroup-vpn ] && cat /etc/firewall.lihas.d/groups/ifacegroup-vpn) {% for group in configspaces | default([]) %}{% for iface in hostvars[inventory_hostname][group]['config']['firewall']['nofw'] | default([]) %}{{ iface }}{% endfor %}{% endfor %}; do
+    IPT_FILTER "-I FORWARD -i $in -o $out -j ACCEPT"
+  done
+  IPT_FILTER "-I INPUT -i $in -j ACCEPT"
+  IPT_FILTER "-I OUTPUT -o $in -j ACCEPT"
+done

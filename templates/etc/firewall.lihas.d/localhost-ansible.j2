@@ -1,0 +1,35 @@
+# managed by ansible
+
+[ -e /etc/firewall.lihas.d/localhost-vpn ] && . /etc/firewall.lihas.d/localhost-vpn
+
+{% if hostvars[inventory_hostname]['bird'] is defined and hostvars[inventory_hostname]['bird']['ospf'] is defined %}
+{%   for ospf in hostvars[inventory_hostname]['bird']['ospf'] | flatten(levels=1) %}{% for area in hostvars[inventory_hostname]['bird']['ospf'][ospf].area | flatten(levels=1) %}{% for iface in hostvars[inventory_hostname]['bird']['ospf'][ospf]['area'].area.interface | flatten(levels=1) %}
+# OSPF {{ iface }}
+IPT_FILTER "-A OUTPUT -o {{ iface }} -p 89 -j ACCEPT"
+IPT_FILTER "-A INPUT -i {{ iface }} -p 89 -j ACCEPT"
+IPT_FILTER "-A OUTPUT -o {{ iface }} -p 2 -j ACCEPT"
+IPT_FILTER "-A INPUT -i {{ iface }} -p 2 -j ACCEPT"
+{% endfor %}{% endfor %}{%   endfor %}
+{% endif %}
+{% for config in hostvars[inventory_hostname]['configspaces'] | default([]) %}{%   if hostvars[inventory_hostname][config]['config']['bird'] is defined and hostvars[inventory_hostname][config]['config']['bird']['ospf'] is defined %}{%     for ospf in hostvars[inventory_hostname][config]['config']['bird']['ospf'] | flatten(levels=1) %}{% for area in hostvars[inventory_hostname][config]['config']['bird']['ospf'][ospf]['area'] | flatten(levels=1) %}{% for iface in hostvars[inventory_hostname][config]['config']['bird']['ospf'][ospf]['area'][area]['interface'] | flatten(levels=1) %}
+# OSPF {{ iface }}
+IPT_FILTER "-A OUTPUT -o {{ iface }} -p 89 -j ACCEPT"
+IPT_FILTER "-A INPUT -i {{ iface }} -p 89 -j ACCEPT"
+IPT_FILTER "-A OUTPUT -o {{ iface }} -p 2 -j ACCEPT"
+IPT_FILTER "-A INPUT -i {{ iface }} -p 2 -j ACCEPT"
+{% endfor %}{% endfor %}{%     endfor %}{%   endif %}{% endfor %}
+
+{% for group in configspaces | default([]) %}
+{% for iface in hostvars[inventory_hostname][group]['config']['firewall']['nofw'] | default([]) %}
+{{ iface }}
+{% endfor %}
+{% endfor %}
+
+# allow everything between routing interfaces
+for in in $([ -e /etc/firewall.lihas.d/groups/ifacegroup-vpn ] && cat /etc/firewall.lihas.d/groups/ifacegroup-vpn) {% for group in configspaces | default([]) %}{% for iface in hostvars[inventory_hostname][group]['config']['firewall']['nofw'] | default([]) %}{{ iface }}{% endfor %}{% endfor %}; do
+  for out in $([ -e /etc/firewall.lihas.d/groups/ifacegroup-vpn ] && cat /etc/firewall.lihas.d/groups/ifacegroup-vpn) {% for group in configspaces | default([]) %}{% for iface in hostvars[inventory_hostname][group]['config']['firewall']['nofw'] | default([]) %}{{ iface }}{% endfor %}{% endfor %}; do
+    IPT_FILTER "-I FORWARD -i $in -o $out -j ACCEPT"
+  done
+  IPT_FILTER "-I INPUT -i $in -j ACCEPT"
+  IPT_FILTER "-I OUTPUT -o $in -j ACCEPT"
+done

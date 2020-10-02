@@ -25,10 +25,16 @@
     src: "{{ file }}.j2"
     dest: "/{{ file }}"
   loop:
-    - etc/firewall.lihas.d/localhost
     - etc/firewall.lihas.d/localhost-ansible
   loop_control:
     loop_var: file
+  notify: reload_firewall-lihas
+- name: "/etc/firewall.lihas.d/localhost: load /etc/firewall.lihas.d/localhost-ansible"
+  lineinfile:
+    path: /etc/firewall.lihas.d/localhost
+    regexp: '^. /etc/firewall.lihas.d/localhost-ansible'
+    line: '. /etc/firewall.lihas.d/localhost-ansible'
+    create: yes
   notify: reload_firewall-lihas
 - name: "configgroups evaluation"
   include: configgroup.yml

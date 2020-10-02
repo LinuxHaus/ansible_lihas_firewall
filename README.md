@@ -15,6 +15,9 @@ Arrays with lines for corresponding the firewall-lihas config files /etc/firewal
 ### %.config.firewall.interface.IFACENAME.network
 ### %.config.firewall.interface.IFACENAME.privclients
 
+## Integration
+* lihas-bird: Add rules for OSPF automatically on OSPF interfaces
+
 ## Dependencies
 
 * lihas-common

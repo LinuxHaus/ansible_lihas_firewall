@@ -7,8 +7,8 @@ galaxy_info:
   min_ansible_version: 2.4
   galaxy_tags: []
 dependencies:
-  - name: lihas-common
-    src: https://github.com/LinuxHaus/ansible-lihas-common.git
+  - name: lihas_common
+    src: https://github.com/LinuxHaus/ansible_lihas_common.git
     version: origin/master
   - name: lihas-ulogd
     src: https://github.com/LinuxHaus/ansible-lihas-ulogd.git

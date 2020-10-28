@@ -4,7 +4,7 @@ Installs and configures firewall-lihas
 
 # Requirements
 
-Uses lihas-common to set up repositiories and lihas-variables to merge the configuration from multiple sources
+Uses lihas-common to set up repositiories and lihas_variables to merge the configuration from multiple sources
 
 ## Role Variables
 Arrays with lines for corresponding the firewall-lihas config files /etc/firewall-lihas.d/interface-IFACENAME/
@@ -20,8 +20,8 @@ Arrays with lines for corresponding the firewall-lihas config files /etc/firewal
 
 ## Dependencies
 
-* lihas-common
-* lihas-variables
+* lihas_common
+* lihas_variables
 
 ## Example Playbook
 ```

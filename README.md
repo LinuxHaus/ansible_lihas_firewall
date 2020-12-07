@@ -4,7 +4,7 @@ Installs and configures firewall-lihas
 
 # Requirements
 
-Uses lihas-common to set up repositiories and lihas_variables to merge the configuration from multiple sources
+Uses lihas_common to set up repositiories and lihas_variables to merge the configuration from multiple sources
 
 To run solo:
 

@@ -6,6 +6,12 @@ Installs and configures firewall-lihas
 
 Uses lihas-common to set up repositiories and lihas_variables to merge the configuration from multiple sources
 
+To run solo:
+
+```
+ansible-galaxy install -r requirements.yml
+ansible-playbook -i localhost, firewall.yml
+```
 ## Role Variables
 Arrays with lines for corresponding the firewall-lihas config files /etc/firewall-lihas.d/interface-IFACENAME/
 ### %.config.firewall.interface.IFACENAME.comment: []
@@ -28,5 +34,5 @@ Arrays with lines for corresponding the firewall-lihas config files /etc/firewal
 ---
 - hosts: '*'
   roles:
-    - lihas-firewall
+    - lihas_firewall
 ```

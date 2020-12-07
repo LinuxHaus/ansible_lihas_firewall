@@ -21,7 +21,7 @@ IPT_FILTER "-A INPUT -i {{ iface }} -p 2 -j ACCEPT"
 
 {% for group in configspaces | default([]) %}
 {% for iface in hostvars[inventory_hostname][group]['config']['firewall']['nofw'] | default([]) %}
-{{ iface }}
+# nofw: {{ iface }}
 {% endfor %}
 {% endfor %}
 

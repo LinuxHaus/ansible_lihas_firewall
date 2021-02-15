@@ -3,7 +3,7 @@
 [ -e /etc/firewall.lihas.d/localhost-vpn ] && . /etc/firewall.lihas.d/localhost-vpn
 
 {% if hostvars[inventory_hostname]['bird'] is defined and hostvars[inventory_hostname]['bird']['ospf'] is defined %}
-{%   for ospf in hostvars[inventory_hostname]['bird']['ospf'] | flatten(levels=1) %}{% for area in hostvars[inventory_hostname]['bird']['ospf'][ospf].area | flatten(levels=1) %}{% for iface in hostvars[inventory_hostname]['bird']['ospf'][ospf]['area'].area.interface | flatten(levels=1) %}
+{%   for ospf in hostvars[inventory_hostname]['bird']['ospf'] | default({}) | dict2items %}{% for area in hostvars[inventory_hostname]['bird']['ospf'][ospf.key]['area'] | default({}) | dict2items %}{% for iface in hostvars[inventory_hostname]['bird']['ospf'][ospf.key]['area'][area.key]['interface'] | flatten(levels=1) %}
 # OSPF {{ iface }}
 IPT_FILTER "-A OUTPUT -o {{ iface }} -p 89 -j ACCEPT"
 IPT_FILTER "-A INPUT -i {{ iface }} -p 89 -j ACCEPT"

@@ -20,6 +20,8 @@ Arrays with lines for corresponding the firewall-lihas config files /etc/firewal
 ### %.config.firewall.interface.IFACENAME.mark
 ### %.config.firewall.interface.IFACENAME.network
 ### %.config.firewall.interface.IFACENAME.privclients
+### bird.ospf.ospf.OSPFNAME.area.AREA.interface
+
 
 ## Integration
 * lihas_bird: Add rules for OSPF automatically on OSPF interfaces

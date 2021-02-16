@@ -1,4 +1,17 @@
 ---
+- name: include lihas_commonariables
+  include_role:
+    name: lihas_common
+  when: lihas_common_done is not defined
+- name: include variables
+  include_role:
+    name: lihas_variables
+  when: configspaces is not defined
+- name: include lihas_syscall
+  include_role:
+    name: lihas_syscall
+  when: lihas_sysctl_done is not defined
+
 - name: install software
   apt:
     name: "{{ item }}"

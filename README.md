@@ -20,6 +20,8 @@ Arrays with lines for corresponding the firewall-lihas config files /etc/firewal
 ### %.config.firewall.interface.IFACENAME.mark
 ### %.config.firewall.interface.IFACENAME.network
 ### %.config.firewall.interface.IFACENAME.privclients
+### %.config.firewall.interface_links.IFACESRC: []
+List of interfaces to link to IFACESRC
 ### bird.ospf.ospf.OSPFNAME.area.AREA.interface
 
 

@@ -19,6 +19,16 @@
   when: ansible_virtualization_type == 'lxc'
   notify: reload_firewall-lihas
 
+# lihas_ansible_keepalived integration
+- name: combine keepalive ip correlations, init
+  set_fact:
+    keepalive_ip_correlation: {}
+- name: combine keepalive ip correlations, expand with configspaces
+  set_fact:
+    keepalive_ip_correlation: "{{ keepalive_ip_correlation | combine(hostvars[inventory_hostname][item]['config']['roles']['keepalived']['ip_correlation'] | default({})) }}"
+    cacheable: no
+  loop: "{{ configspaces }}"
+
 # firewall-lihas
 - name: config firewall-lihas
   template:
@@ -26,6 +36,9 @@
     dest: "/{{ file }}"
   loop:
     - etc/firewall.lihas.d/localhost-ansible
+    - etc/firewall.lihas.d/include/ansible_keepalived_snat
+    - etc/firewall.lihas.d/include/ansible_keepalived_dnat
+    - etc/firewall.lihas.d/include/ansible_keepalived_privclients
   loop_control:
     loop_var: file
   notify: reload_firewall-lihas

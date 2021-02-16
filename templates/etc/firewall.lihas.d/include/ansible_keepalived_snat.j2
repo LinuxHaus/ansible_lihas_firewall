@@ -1,0 +1,21 @@
+# FAI/ansible managed
+{% if LIHASVARS.roles is defined and LIHASVARS.roles.proxmox is defined and LIHASVARS.roles.proxmox.lxc is defined %}
+{%   for i in lookup('dict',LIHASVARS.roles.proxmox.lxc | default({})) %}
+{%     if i.value.intern_ipv4 is defined and i.value.extern_ipv4 is defined %}
+# Proxmox ID {{ i.key }} {{ i.value.hostname }}
+{{ i.value.intern_ipv4 }}       {{ i.value.extern_ipv4 }}       tcp     0
+{{ i.value.intern_ipv4 }}       {{ i.value.extern_ipv4 }}       udp     0
+{{ i.value.intern_ipv4 }}       {{ i.value.extern_ipv4 }}       icmp    0
+{%     endif %}
+{%   endfor %}
+{% endif %}
+
+# keepalived integration
+{% for i in keepalive_ip_correlation | default({}) | dict2items() %}
+{%   if i.value.extern_ipv4 is defined and i.value.extern_ipv4_iface is defined and i.value.extern_ipv4_iface is defined %}
+{{ i.value.intern_ipv4 }}	{{ i.value.extern_ipv4 }}	tcp	0
+{{ i.value.intern_ipv4 }}	{{ i.value.extern_ipv4 }}	udp	0
+{{ i.value.intern_ipv4 }}	{{ i.value.extern_ipv4 }}	icmp	0
+{%   endif %}
+{% endfor %}
+

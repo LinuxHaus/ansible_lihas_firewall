@@ -1,0 +1,12 @@
+# ansible managed
+# keepalived integration
+{% for i in keepalive_ip_correlation | default({}) | dict2items() %}
+{%   if i.value.extern_ipv4 is defined and i.value.intern_ipv4 is defined and i.value.extern_ports is defined %}
+{%     for proto in i.value.extern_ports | default({}) | dict2items() %}
+{%       for port in proto.value | default([]) %}
+{{ i.value.intern_ipv4 }}	{{ i.value.extern_ipv4 }}	{{ proto.key }}	{{ port }}
+{%       endfor %}
+{%     endfor %}
+{%   endif %}
+{% endfor %}
+

@@ -4,7 +4,7 @@
 {%   if i.value.extern_ipv4 is defined and i.value.intern_ipv4 is defined and i.value.extern_ports is defined %}
 {%     for proto in i.value.extern_ports | default({}) | dict2items() %}
 {%       for port in proto.value | default([]) %}
-{{ i.value.intern_ipv4 }}	{{ i.value.extern_ipv4 }}	{{ proto.key }}	{{ port }}
+0.0.0.0/0	{{ i.value.intern_ipv4 }}	{{ proto.key }}	{{ port }}
 {%       endfor %}
 {%     endfor %}
 {%   endif %}

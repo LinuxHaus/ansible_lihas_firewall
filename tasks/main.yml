@@ -7,9 +7,9 @@
   include_role:
     name: lihas_variables
   when: configspaces is not defined
-- name: include lihas_syscall
+- name: include lihas_sysctl
   include_role:
-    name: lihas_syscall
+    name: lihas_sysctl
   when: lihas_sysctl_done is not defined
 
 - name: install software

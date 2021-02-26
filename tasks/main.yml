@@ -1,5 +1,5 @@
 ---
-- name: include lihas_commonariables
+- name: include lihas_common
   include_role:
     name: lihas_common
   when: lihas_common_done is not defined

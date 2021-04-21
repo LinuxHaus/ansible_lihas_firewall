@@ -23,6 +23,8 @@ Arrays with lines for corresponding the firewall-lihas config files /etc/firewal
 ### %.config.firewall.interface_links.IFACESRC: []
 List of interfaces to link to IFACESRC
 ### bird.ospf.ospf.OSPFNAME.area.AREA.interface
+### %.config.firewall.extra_line: []
+Extra lines in /etc/firewall-lihas.d/localhost-ansible
 
 
 ## Integration

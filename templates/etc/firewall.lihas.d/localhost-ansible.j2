@@ -1,4 +1,4 @@
-# managed by ansible
+# {{ ansible_managed }}
 
 [ -e /etc/firewall.lihas.d/localhost-vpn ] && . /etc/firewall.lihas.d/localhost-vpn
 
@@ -33,3 +33,8 @@ for in in $([ -e /etc/firewall.lihas.d/groups/ifacegroup-vpn ] && cat /etc/firew
   IPT_FILTER "-I INPUT -i $in -j ACCEPT"
   IPT_FILTER "-I OUTPUT -o $in -j ACCEPT"
 done
+
+# extra lines %.config.firewall.extra_line[]
+{% for extra_line in iptables_extra_lines | default([]) %}
+{{ extra_line }}
+{% endfor %}

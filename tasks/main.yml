@@ -42,6 +42,16 @@
     cacheable: no
   loop: "{{ configspaces }}"
 
+# extra iptables lines
+- name: combine extra iptables lines
+  set_fact:
+    iptables_extra_lines: []
+- name: combine extra iptables lines, expand with configspaces
+  set_fact:
+    iptables_extra_lines: "{{ iptables_extra_lines + hostvars[inventory_hostname][item]['config']['firewall']['extra_line'] | default([]) }}"
+    cacheable: no
+  loop: "{{ configspaces }}"
+
 # firewall-lihas
 - name: config firewall-lihas
   template:

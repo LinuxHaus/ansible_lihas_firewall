@@ -10,3 +10,5 @@
   loop_control:
     loop_var: file
   notify: reload_firewall-lihas
+  tags:
+    - firewall_config

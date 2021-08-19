@@ -3,6 +3,8 @@
   file:
     path: "/etc/firewall.lihas.d/interface-{{ iface }}"
     state: directory
+  tags:
+    - firewall_config
 - debug:
     msg: "group {{ configgroup }}, iface {{ iface }}"
 - name: "firewall for interface {{ iface }}"
@@ -20,3 +22,5 @@
   loop_control:
     loop_var: file
   notify: reload_firewall-lihas
+  tags:
+    - firewall_config

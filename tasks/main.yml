@@ -7,6 +7,8 @@
   include_role:
     name: lihas_variables
   when: configspaces is not defined
+  tags:
+    - firewall_config
 - name: include lihas_sysctl
   include_role:
     name: lihas_sysctl
@@ -36,21 +38,29 @@
 - name: combine keepalive ip correlations, init
   set_fact:
     keepalive_ip_correlation: {}
+  tags:
+    - firewall_config
 - name: combine keepalive ip correlations, expand with configspaces
   set_fact:
     keepalive_ip_correlation: "{{ keepalive_ip_correlation | combine(hostvars[inventory_hostname][item]['config']['roles']['keepalived']['ip_correlation'] | default({})) }}"
     cacheable: no
   loop: "{{ configspaces }}"
+  tags:
+    - firewall_config
 
 # extra iptables lines
 - name: combine extra iptables lines
   set_fact:
     iptables_extra_lines: []
+  tags:
+    - firewall_config
 - name: combine extra iptables lines, expand with configspaces
   set_fact:
     iptables_extra_lines: "{{ iptables_extra_lines + hostvars[inventory_hostname][item]['config']['firewall']['extra_line'] | default([]) }}"
     cacheable: no
   loop: "{{ configspaces }}"
+  tags:
+    - firewall_config
 
 # firewall-lihas
 - name: config firewall-lihas
@@ -65,6 +75,8 @@
   loop_control:
     loop_var: file
   notify: reload_firewall-lihas
+  tags:
+    - firewall_config
 - name: "/etc/firewall.lihas.d/localhost: load /etc/firewall.lihas.d/localhost-ansible"
   lineinfile:
     path: /etc/firewall.lihas.d/localhost
@@ -72,12 +84,18 @@
     line: '. /etc/firewall.lihas.d/localhost-ansible'
     create: yes
   notify: reload_firewall-lihas
+  tags:
+    - firewall_config
 - name: "configgroups evaluation"
   include: configgroup.yml
   loop: "{{ configspaces }}"
   loop_control:
     loop_var: configgroup
+  tags:
+    - firewall_config
 - name: enable firewall-lihas
   service:
     name: firewall-lihas
     enabled: true
+  tags:
+    - firewall_config

@@ -6,8 +6,12 @@
     loop_var: iface
   async: 60
   poll: 1
+  tags:
+    - firewall_config
 - name: link common interface directory
   include: firewall-lihas-interface-links.yml
   loop: "{{ hostvars[inventory_hostname][configgroup]['config']['firewall']['interface_links'] | default([]) | flatten(levels=1) }}"
   loop_control:
     loop_var: iface
+  tags:
+    - firewall_config

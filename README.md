@@ -29,11 +29,15 @@ Extra lines in /etc/firewall-lihas.d/localhost-ansible
 
 ## Integration
 * lihas_bird: Add rules for OSPF automatically on OSPF interfaces
+* lihas_keepalived: Add SNAT/DNAT rules
 
 ## Dependencies
 
 * lihas_common
 * lihas_variables
+
+## Tags
+* firewall_config: only do configuratiuon, no software installation, needs tag `variables` as well
 
 ## Example Playbook
 ```

@@ -6,6 +6,7 @@
     src: "/etc/firewall.lihas.d/interface-{{ iface }}"
     path: "/etc/firewall.lihas.d/interface-{{ file }}"
     state: link
+    force: yes
   loop:  "{{ hostvars[inventory_hostname][configgroup]['config']['firewall']['interface_links'][iface] | default([]) }}"
   loop_control:
     loop_var: file

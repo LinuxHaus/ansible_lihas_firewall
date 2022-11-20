@@ -1,6 +1,6 @@
 ---
 - name: reload_firewall-lihas
-  ansible.buildin.service:
+  ansible.builtin.service:
     name: firewall-lihas
     state: restarted
 ...

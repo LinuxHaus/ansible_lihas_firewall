@@ -4,8 +4,6 @@
   loop: "{{ hostvars[inventory_hostname][configgroup]['config'].firewall.interface | default([]) | flatten(levels=1) }}"
   loop_control:
     loop_var: iface
-  async: 60
-  poll: 1
   tags:
     - firewall_config
 - name: link common interface directory

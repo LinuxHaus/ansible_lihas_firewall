@@ -36,19 +36,15 @@
   notify: reload_firewall-lihas
 
 # lihas_ansible_keepalived integration
-- name: combine keepalive ip correlations, init
-  ansible.builtin.set_fact:
-    keepalive_ip_correlation: {}
-  tags:
-    - firewall_config
 - name: combine keepalive ip correlations, expand with configspaces
   ansible.builtin.set_fact:
     keepalive_ip_correlation: >
-      "{{ keepalive_ip_correlation | combine(hostvars[inventory_hostname][item]['config']['roles']['keepalived']['ip_correlation'] | default({})) }}"
+      "{{ keepalive_ip_correlation | default({]) | combine(hostvars[inventory_hostname][item]['config']['roles']['keepalived']['ip_correlation'] | default({})) }}"
     cacheable: false
   loop: "{{ configspaces }}"
   tags:
     - firewall_config
+  when: hostvars[inventory_hostname][item]['config']['roles']['keepalived']['ip_correlation'] is defined
 
 # extra iptables lines
 - name: combine extra iptables lines

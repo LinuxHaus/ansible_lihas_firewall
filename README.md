@@ -22,6 +22,8 @@ Arrays with lines for corresponding the firewall-lihas config files /etc/firewal
 ### %.config.firewall.interface.IFACENAME.privclients
 ### %.config.firewall.interface_links.IFACESRC: []
 List of interfaces to link to IFACESRC
+### %.config.firewall.include.FILENAME: []
+List of lines to be put in /etc/firewall.lihas.d/include/FILENAME
 ### bird.ospf.ospf.OSPFNAME.area.AREA.interface
 ### %.config.firewall.extra_line: []
 Extra lines in /etc/firewall-lihas.d/localhost-ansible

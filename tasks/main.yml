@@ -93,6 +93,31 @@
     loop_var: configgroup
   tags:
     - firewall_config
+
+# handle include files
+- name: find common include files
+  ansible.builtin.set_fact:
+    include_files: "{{ include_files | default({}) | combine(hostvars[inventory_hostname][item]['config']['firewall']['include'] | default({}), recursive=true, list_merge='append_rp' ) }}"
+    cacheable: false
+  loop: "{{ configspaces }}"
+  tags:
+    - firewall_config
+- name: "DEBUG: include_files"
+  ansible.builtin.debug:
+    var: include_files
+    verbosity: 1
+- name: include files
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/include/{{ file.key }}"
+    src: "etc/firewall.lihas.d/include/include_files.j2"
+    mode: '0640'
+  with_dict: "{{ include_files }}"
+  loop_control:
+    loop_var: file
+  notify: reload_firewall-lihas
+  tags:
+    - firewall_config
+
 - name: enable firewall-lihas
   ansible.builtin.service:
     name: firewall-lihas

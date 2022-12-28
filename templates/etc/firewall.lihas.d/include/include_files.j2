@@ -1,0 +1,4 @@
+# ansible managed
+{% for line in file.value | default([]) %}
+{{ line }}
+{% endfor %}

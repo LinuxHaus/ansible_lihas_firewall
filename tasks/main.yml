@@ -104,14 +104,14 @@
     - firewall_config
 - name: "DEBUG: include_files"
   ansible.builtin.debug:
-    var: include_files
+    var: include_files | default({})
     verbosity: 1
 - name: include files
   ansible.builtin.template:
     dest: "/etc/firewall.lihas.d/include/{{ file.key }}"
     src: "etc/firewall.lihas.d/include/include_files.j2"
     mode: '0640'
-  with_dict: "{{ include_files }}"
+  with_dict: "{{ include_files | default({}) }}"
   loop_control:
     loop_var: file
   notify: reload_firewall-lihas

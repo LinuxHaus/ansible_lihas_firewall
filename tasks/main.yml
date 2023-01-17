@@ -38,8 +38,8 @@
 # lihas_ansible_keepalived integration
 - name: combine keepalive ip correlations, expand with configspaces
   ansible.builtin.set_fact:
-    keepalive_ip_correlation: >
-      "{{ keepalive_ip_correlation | default({]) | combine(hostvars[inventory_hostname][item]['config']['roles']['keepalived']['ip_correlation'] | default({})) }}"
+    keepalive_ip_correlation:
+      "{{ keepalive_ip_correlation | default({}) | combine(hostvars[inventory_hostname][item]['config']['roles']['keepalived']['ip_correlation'] | default({})) }}"
     cacheable: false
   loop: "{{ configspaces }}"
   tags:

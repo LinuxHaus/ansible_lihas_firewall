@@ -1,5 +1,7 @@
 ---
 galaxy_info:
+  role_name: lihas_firewall
+  namespace: lihas
   author: Adrian Reyer <lihas@lihas.de>
   description: Install firewall-lihas on Debian
   license: GPL-3.0-or-later

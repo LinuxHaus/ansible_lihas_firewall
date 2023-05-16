@@ -33,6 +33,8 @@
     create: true
     mode: '0644'
   when: ansible_virtualization_type == 'lxc'
+  tags:
+    - firewall_config
   notify: reload_firewall-lihas
 
 # lihas_ansible_keepalived integration
@@ -98,6 +100,32 @@
   tags:
     - firewall_config
 
+# handle group files
+- name: find group files
+  ansible.builtin.set_fact:
+    include_files: "{{ group_files | default({}) | combine(hostvars[inventory_hostname][item]['config']['firewall']['group'] | default({}), recursive=true, list_merge='append_rp' ) }}"
+    cacheable: false
+  loop: "{{ configspaces }}"
+  tags:
+    - firewall_config
+- name: "DEBUG: group_files"
+  ansible.builtin.debug:
+    var: group_files | default({})
+    verbosity: 1
+  tags:
+    - firewall_config
+- name: group files
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/group/{{ file.key }}"
+    src: "etc/firewall.lihas.d/include/include_files.j2"
+    mode: '0640'
+  with_dict: "{{ group_files | default({}) }}"
+  loop_control:
+    loop_var: file
+  notify: reload_firewall-lihas
+  tags:
+    - firewall_config
+
 # handle include files
 - name: find common include files
   ansible.builtin.set_fact:
@@ -110,6 +138,8 @@
   ansible.builtin.debug:
     var: include_files | default({})
     verbosity: 1
+  tags:
+    - firewall_config
 - name: include files
   ansible.builtin.template:
     dest: "/etc/firewall.lihas.d/include/{{ file.key }}"

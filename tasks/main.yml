@@ -103,7 +103,7 @@
 # handle group files
 - name: find group files
   ansible.builtin.set_fact:
-    include_files: "{{ group_files | default({}) | combine(hostvars[inventory_hostname][item]['config']['firewall']['group'] | default({}), recursive=true, list_merge='append_rp' ) }}"
+    group_files: "{{ group_files | default({}) | combine(hostvars[inventory_hostname][item]['config']['firewall']['group'] | default({}), recursive=true, list_merge='append_rp' ) }}"
     cacheable: false
   loop: "{{ configspaces }}"
   tags:
@@ -114,9 +114,14 @@
     verbosity: 1
   tags:
     - firewall_config
+- name: Make sure /etc/firewall.lihas.d/groups exists
+  ansible.builtin.file:
+    mode: '0750'
+    path: "/etc/firewall.lihas.d/groups"
+    state: "directory"
 - name: group files
   ansible.builtin.template:
-    dest: "/etc/firewall.lihas.d/group/{{ file.key }}"
+    dest: "/etc/firewall.lihas.d/groups/{{ file.key }}"
     src: "etc/firewall.lihas.d/include/include_files.j2"
     mode: '0640'
   with_dict: "{{ group_files | default({}) }}"

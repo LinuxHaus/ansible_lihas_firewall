@@ -17,9 +17,15 @@ Arrays with lines for corresponding the firewall-lihas config files /etc/firewal
 ### %.config.firewall.interface.IFACENAME.comment: []
 ### %.config.firewall.interface.IFACENAME.dnat
 ### %.config.firewall.interface.IFACENAME.snat
-### %.config.firewall.interface.IFACENAME.mark
+### %.config.firewall.interface.IFACENAME.nonat
 ### %.config.firewall.interface.IFACENAME.network
 ### %.config.firewall.interface.IFACENAME.privclients
+### %.config.firewall.interface.IFACENAME.dnat6
+### %.config.firewall.interface.IFACENAME.snat6
+### %.config.firewall.interface.IFACENAME.nonat6
+### %.config.firewall.interface.IFACENAME.network6
+### %.config.firewall.interface.IFACENAME.privclients6
+### %.config.firewall.interface.IFACENAME.mark
 ### %.config.firewall.interface_links.IFACESRC: []
 List of interfaces to link to IFACESRC
 ### %.config.firewall.include.FILENAME: []

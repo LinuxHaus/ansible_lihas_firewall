@@ -17,10 +17,17 @@
   loop:
     - comment
     - network
-    - privclients
-    - snat
+    - network6
     - dnat
+    - dnat6
     - masquerade
+    - masquerade6
+    - nonat
+    - nonat6
+    - privclients
+    - privclients6
+    - snat
+    - snat6
     - mark
   loop_control:
     loop_var: file

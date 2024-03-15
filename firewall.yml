@@ -1,4 +1,5 @@
 ---
-- hosts: '*'
+- name: Run firewall
+  hosts: '*'
   roles:
     - lihas_firewall

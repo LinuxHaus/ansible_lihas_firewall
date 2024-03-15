@@ -1,20 +1,20 @@
 ---
-- name: include lihas_common
+- name: Include lihas_common
   ansible.builtin.include_role:
     name: lihas_common
   when: lihas_common_done is not defined
-- name: include variables
+- name: Include variables
   ansible.builtin.include_role:
     name: lihas_variables
   when: configspaces is not defined
   tags:
     - firewall_config
-- name: include lihas_sysctl
+- name: Include lihas_sysctl
   ansible.builtin.include_role:
     name: lihas_sysctl
   when: lihas_sysctl_done is not defined
 
-- name: install software
+- name: Install software
   ansible.builtin.apt:
     name: "{{ item }}"
     state: present
@@ -22,10 +22,10 @@
     - firewall-lihas
   loop_control:
     loop_var: item
-  notify: reload_firewall-lihas
+  notify: Reload firewall-lihas
 
 # LXCs: use NFLOG
-- name: "/etc/default/firewall: TARGETLOG=NFLOG"
+- name: "LXCs: use NFLOG /etc/default/firewall: TARGETLOG=NFLOG"
   ansible.builtin.lineinfile:
     path: /etc/default/firewall
     regexp: '^TARGETLOG='
@@ -35,30 +35,26 @@
   when: ansible_virtualization_type == 'lxc'
   tags:
     - firewall_config
-  notify: reload_firewall-lihas
+  notify: Reload firewall-lihas
 
 # lihas_ansible_keepalived integration
-- name: combine keepalive ip correlations, init
+- name: Combine keepalive ip correlations, expand with configspaces
   ansible.builtin.set_fact:
-    keepalive_ip_correlation: {}
-  tags:
-    - firewall_config
-- name: combine keepalive ip correlations, expand with configspaces
-  ansible.builtin.set_fact:
-    keepalive_ip_correlation:
-      "{{ keepalive_ip_correlation | default({}) | combine(hostvars[inventory_hostname][item]['config']['roles']['keepalived']['ip_correlation'] | default({})) }}"
+    keepalive_ip_correlation: >
+      {{ keepalive_ip_correlation | default({}) |
+      combine(hostvars[inventory_hostname][item]['config']['roles']['keepalived']['ip_correlation'] | default({})) }}
     cacheable: false
   loop: "{{ configspaces }}"
   tags:
     - firewall_config
 
 # extra iptables lines
-- name: combine extra iptables lines
+- name: Combine extra iptables lines
   ansible.builtin.set_fact:
     iptables_extra_lines: []
   tags:
     - firewall_config
-- name: combine extra iptables lines, expand with configspaces
+- name: Combine extra iptables lines, expand with configspaces
   ansible.builtin.set_fact:
     iptables_extra_lines: "{{ iptables_extra_lines + hostvars[inventory_hostname][item]['config']['firewall']['extra_line'] | default([]) }}"
     cacheable: false
@@ -67,7 +63,7 @@
     - firewall_config
 
 # firewall-lihas
-- name: config firewall-lihas
+- name: Config firewall-lihas
   ansible.builtin.template:
     src: "{{ file }}.j2"
     dest: "/{{ file }}"
@@ -79,7 +75,7 @@
     - etc/firewall.lihas.d/include/ansible_keepalived_privclients
   loop_control:
     loop_var: file
-  notify: reload_firewall-lihas
+  notify: Reload firewall-lihas
   tags:
     - firewall_config
 - name: "/etc/firewall.lihas.d/localhost: load /etc/firewall.lihas.d/localhost-ansible"
@@ -89,10 +85,10 @@
     line: '. /etc/firewall.lihas.d/localhost-ansible'
     create: true
     mode: '0644'
-  notify: reload_firewall-lihas
+  notify: Reload firewall-lihas
   tags:
     - firewall_config
-- name: "configgroups evaluation"
+- name: "Evaluate configgroups"
   ansible.builtin.include_tasks: configgroup.yml
   loop: "{{ configspaces }}"
   loop_control:
@@ -101,9 +97,11 @@
     - firewall_config
 
 # handle group files
-- name: find group files
+- name: Find group files
   ansible.builtin.set_fact:
-    group_files: "{{ group_files | default({}) | combine(hostvars[inventory_hostname][item]['config']['firewall']['group'] | default({}), recursive=true, list_merge='append_rp' ) }}"
+    group_files: >-
+      {{ group_files | default({}) | combine(hostvars[inventory_hostname][item]['config']['firewall']['group'] |
+        default({}), recursive=true, list_merge='append_rp') }}
     cacheable: false
   loop: "{{ configspaces }}"
   tags:
@@ -119,7 +117,7 @@
     mode: '0750'
     path: "/etc/firewall.lihas.d/groups"
     state: "directory"
-- name: group files
+- name: Deploy group files
   ansible.builtin.template:
     dest: "/etc/firewall.lihas.d/groups/{{ file.key }}"
     src: "etc/firewall.lihas.d/include/include_files.j2"
@@ -127,14 +125,16 @@
   with_dict: "{{ group_files | default({}) }}"
   loop_control:
     loop_var: file
-  notify: reload_firewall-lihas
+  notify: Reload firewall-lihas
   tags:
     - firewall_config
 
 # handle include files
-- name: find common include files
+- name: Find common include files
   ansible.builtin.set_fact:
-    include_files: "{{ include_files | default({}) | combine(hostvars[inventory_hostname][item]['config']['firewall']['include'] | default({}), recursive=true, list_merge='append_rp' ) }}"
+    include_files: >-
+      {{ include_files | default({}) | combine(hostvars[inventory_hostname][item]['config']['firewall']['include'] |
+        default({}), recursive=true, list_merge='append_rp') }}
     cacheable: false
   loop: "{{ configspaces }}"
   tags:
@@ -145,7 +145,7 @@
     verbosity: 1
   tags:
     - firewall_config
-- name: include files
+- name: Deploy include files
   ansible.builtin.template:
     dest: "/etc/firewall.lihas.d/include/{{ file.key }}"
     src: "etc/firewall.lihas.d/include/include_files.j2"
@@ -153,11 +153,11 @@
   with_dict: "{{ include_files | default({}) }}"
   loop_control:
     loop_var: file
-  notify: reload_firewall-lihas
+  notify: Reload firewall-lihas
   tags:
     - firewall_config
 
-- name: enable firewall-lihas
+- name: Enable firewall-lihas
   ansible.builtin.service:
     name: firewall-lihas
     enabled: true

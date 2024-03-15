@@ -1,5 +1,5 @@
 ---
-- name: link common interface directories
+- name: Link common interface directories
   ansible.builtin.file:
     src: "/etc/firewall.lihas.d/interface-{{ iface }}"
     path: "/etc/firewall.lihas.d/interface-{{ file }}"
@@ -8,6 +8,6 @@
   loop: "{{ hostvars[inventory_hostname][configgroup]['config']['firewall']['interface_links'][iface] | default([]) }}"
   loop_control:
     loop_var: file
-  notify: reload_firewall-lihas
+  notify: Reload firewall-lihas
   tags:
     - firewall_config

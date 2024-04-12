@@ -9,28 +9,144 @@
 - name: Debug group/iface
   ansible.builtin.debug:
     msg: "group {{ configgroup }}, iface {{ iface }}"
-- name: "Firewall for interface {{ iface }}"
+- name: "Firewall for interface {{ iface }} comment"
   ansible.builtin.template:
-    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/{{ file }}"
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/comment"
     src: "etc/firewall.lihas.d/interface/common.j2"
     mode: '0640'
-  loop:
-    - comment
-    - network
-    - network6
-    - dnat
-    - dnat6
-    - masquerade
-    - masquerade6
-    - nonat
-    - nonat6
-    - privclients
-    - privclients6
-    - snat
-    - snat6
-    - mark
-  loop_control:
-    loop_var: file
   notify: Reload firewall-lihas
+  vars:
+    file: comment
   tags:
     - firewall_config
+- name: "Firewall for interface {{ iface }} network"
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/network"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+    mode: '0640'
+  notify: Reload firewall-lihas
+  vars:
+    file: network
+  tags:
+    - firewall_config
+- name: "Firewall for interface {{ iface }} network6"
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/network6"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+    mode: '0640'
+  notify: Reload firewall-lihas
+  vars:
+    file: network6
+  tags:
+    - firewall_config
+- name: "Firewall for interface {{ iface }} dnat"
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/dnat"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+    mode: '0640'
+  notify: Reload firewall-lihas
+  vars:
+    file: dnat
+  tags:
+    - firewall_config
+- name: "Firewall for interface {{ iface }} dnat6"
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/dnat6"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+    mode: '0640'
+  notify: Reload firewall-lihas
+  vars:
+    file: dnat6
+  tags:
+    - firewall_config
+- name: "Firewall for interface {{ iface }} masquerade"
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/masquerade"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+    mode: '0640'
+  notify: Reload firewall-lihas
+  vars:
+    file: masquerade
+  tags:
+    - firewall_config
+- name: "Firewall for interface {{ iface }} masquerade6"
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/masquerade6"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+    mode: '0640'
+  notify: Reload firewall-lihas
+  vars:
+    file: masquerade6
+  tags:
+    - firewall_config
+- name: "Firewall for interface {{ iface }} nonat"
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/nonat"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+    mode: '0640'
+  notify: Reload firewall-lihas
+  vars:
+    file: nonat
+  tags:
+    - firewall_config
+- name: "Firewall for interface {{ iface }} nonat6"
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/nonat6"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+    mode: '0640'
+  notify: Reload firewall-lihas
+  vars:
+    file: nonat6
+  tags:
+    - firewall_config
+- name: "Firewall for interface {{ iface }} privclients"
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/privclients"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+    mode: '0640'
+  notify: Reload firewall-lihas
+  vars:
+    file: privclients
+  tags:
+    - firewall_config
+- name: "Firewall for interface {{ iface }} privclients6"
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/privclients6"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+    mode: '0640'
+  notify: Reload firewall-lihas
+  vars:
+    file: privclients6
+  tags:
+    - firewall_config
+- name: "Firewall for interface {{ iface }} snat"
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/snat"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+    mode: '0640'
+  notify: Reload firewall-lihas
+  vars:
+    file: snat
+  tags:
+    - firewall_config
+- name: "Firewall for interface {{ iface }} snat6"
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/snat6"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+    mode: '0640'
+  notify: Reload firewall-lihas
+  vars:
+    file: snat6
+  tags:
+    - firewall_config
+- name: "Firewall for interface {{ iface }} mark"
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/mark"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+    mode: '0640'
+  notify: Reload firewall-lihas
+  vars:
+    file: mark
+  tags:
+    - firewall_config
+...

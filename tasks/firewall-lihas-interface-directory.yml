@@ -99,6 +99,26 @@
     file: nonat6
   tags:
     - firewall_config
+- name: "Firewall for interface {{ iface }} reject"
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/reject"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+    mode: '0640'
+  notify: Reload firewall-lihas
+  vars:
+    file: reject
+  tags:
+    - firewall_config
+- name: "Firewall for interface {{ iface }} reject6"
+  ansible.builtin.template:
+    dest: "/etc/firewall.lihas.d/interface-{{ iface }}/reject6"
+    src: "etc/firewall.lihas.d/interface/common.j2"
+    mode: '0640'
+  notify: Reload firewall-lihas
+  vars:
+    file: reject6
+  tags:
+    - firewall_config
 - name: "Firewall for interface {{ iface }} privclients"
   ansible.builtin.template:
     dest: "/etc/firewall.lihas.d/interface-{{ iface }}/privclients"

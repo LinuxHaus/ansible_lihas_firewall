@@ -1,4 +1,4 @@
 # ansible managed
 {% for line in file.value | default([]) %}
-{{ line }}
+{{ line if line is not none }}
 {% endfor %}

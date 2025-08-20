@@ -36,5 +36,5 @@ done
 
 # extra lines %.config.firewall.extra_line[]
 {% for extra_line in iptables_extra_lines | default([]) %}
-{{ extra_line }}
+{{ extra_line if extra_line is not none }}
 {% endfor %}

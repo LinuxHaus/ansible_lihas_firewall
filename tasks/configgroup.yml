@@ -1,11 +1,4 @@
 ---
-- name: Create interface directory
-  ansible.builtin.include_tasks: firewall-lihas-interface-directory.yml
-  loop: "{{ hostvars[inventory_hostname][configgroup]['config'].firewall.interface | default([]) | flatten(levels=1) }}"
-  loop_control:
-    loop_var: iface
-  tags:
-    - firewall_config
 - name: Link common interface directory
   ansible.builtin.include_tasks: firewall-lihas-interface-links.yml
   loop: "{{ hostvars[inventory_hostname][configgroup]['config']['firewall']['interface_links'] | default([]) | flatten(levels=1) }}"

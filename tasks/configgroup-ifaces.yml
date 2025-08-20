@@ -1,0 +1,16 @@
+---
+- name: Collect firewall interfaces
+  ansible.builtin.set_fact:
+    lihas_firewall_ifaces: "{{ lihas_firewall_ifaces + [ iface ] }}"
+  loop: "{{ hostvars[inventory_hostname][configgroup]['config'].firewall.interface.keys() }}"
+  loop_control:
+    loop_var: iface
+  when: hostvars[inventory_hostname][configgroup]['config'].firewall.interface is defined
+  tags:
+    - firewall_config
+- name: "DEBUG: ifaces after {{ configgroup }}"
+  ansible.builtin.debug:
+    var: lihas_firewall_ifaces
+    verbosity: 1
+  tags:
+    - firewall_config

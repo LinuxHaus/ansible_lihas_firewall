@@ -88,6 +88,25 @@
   notify: Reload firewall-lihas
   tags:
     - firewall_config
+- name: Collect firewall interfaces, init
+  ansible.builtin.set_fact:
+    lihas_firewall_ifaces: []
+  tags:
+    - firewall_config
+- name: "Evaluate configgroups, find interface names"
+  ansible.builtin.include_tasks: configgroup-ifaces.yml
+  loop: "{{ configspaces }}"
+  loop_control:
+    loop_var: configgroup
+  tags:
+    - firewall_config
+- name: Create interface directory
+  ansible.builtin.include_tasks: firewall-lihas-interface-directory.yml
+  with_list: "{{ lihas_firewall_ifaces | unique() }}"
+  loop_control:
+    loop_var: iface
+  tags:
+    - firewall_config
 - name: "Evaluate configgroups"
   ansible.builtin.include_tasks: configgroup.yml
   loop: "{{ configspaces }}"

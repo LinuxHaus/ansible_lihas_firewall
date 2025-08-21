@@ -6,9 +6,6 @@
     mode: '0750'
   tags:
     - firewall_config
-- name: Debug group/iface
-  ansible.builtin.debug:
-    msg: "group {{ configgroup }}, iface {{ iface }}"
 - name: "Firewall for interface {{ iface }} comment"
   ansible.builtin.template:
     dest: "/etc/firewall.lihas.d/interface-{{ iface }}/comment"

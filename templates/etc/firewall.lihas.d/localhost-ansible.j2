@@ -26,8 +26,8 @@ IPT_FILTER "-A INPUT -i {{ iface }} -p 2 -j ACCEPT"
 {% endfor %}
 
 # allow everything between routing interfaces
-for in in $([ -e /etc/firewall.lihas.d/groups/ifacegroup-vpn ] && cat /etc/firewall.lihas.d/groups/ifacegroup-vpn) {% for group in configspaces | default([]) %}{% for iface in hostvars[inventory_hostname][group]['config']['firewall']['nofw'] | default([]) %}{{ iface }}{% endfor %}{% endfor %}; do
-  for out in $([ -e /etc/firewall.lihas.d/groups/ifacegroup-vpn ] && cat /etc/firewall.lihas.d/groups/ifacegroup-vpn) {% for group in configspaces | default([]) %}{% for iface in hostvars[inventory_hostname][group]['config']['firewall']['nofw'] | default([]) %}{{ iface }}{% endfor %}{% endfor %}; do
+for in in $([ -e /etc/firewall.lihas.d/groups/ifacegroup-vpn ] && sed 's/^#.*//; /^[ \t]*$/d' /etc/firewall.lihas.d/groups/ifacegroup-vpn) {% for group in configspaces | default([]) %}{% for iface in hostvars[inventory_hostname][group]['config']['firewall']['nofw'] | default([]) %}{{ iface }}{% endfor %}{% endfor %}; do
+  for out in $([ -e /etc/firewall.lihas.d/groups/ifacegroup-vpn ] && sed 's/^#.*//; /^[ \t]*$/d' /etc/firewall.lihas.d/groups/ifacegroup-vpn) {% for group in configspaces | default([]) %}{% for iface in hostvars[inventory_hostname][group]['config']['firewall']['nofw'] | default([]) %}{{ iface }}{% endfor %}{% endfor %}; do
     IPT_FILTER "-I FORWARD -i $in -o $out -j ACCEPT"
   done
   IPT_FILTER "-I INPUT -i $in -j ACCEPT"
